@@ -1,9 +1,8 @@
 package com.dialogue.dialogue.controller;
 
 import com.dialogue.dialogue.models.classes.UserClasses.AddUserResult;
-import com.dialogue.dialogue.models.classes.UserClasses.CheckUserExistsResult;
+import com.dialogue.dialogue.models.classes.CheckIfExistsResult;
 import com.dialogue.dialogue.models.classes.UserClasses.GetUserResult;
-import com.dialogue.dialogue.models.classes.Result;
 import com.dialogue.dialogue.models.classes.UserClasses.User;
 import com.dialogue.dialogue.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,13 @@ public class userController {
     @PutMapping("/user")
     public AddUserResult addUser(@RequestBody User newUser){
         AddUserResult addUserResult = new AddUserResult(1, "Failure", false);
-        CheckUserExistsResult checkUserExistsResult = new CheckUserExistsResult(1, "Failure", false);
+        CheckIfExistsResult checkUserExistsResult = new CheckIfExistsResult(1, "Failure", false);
         try{
             checkUserExistsResult = userService.checkIfUserExists(newUser.getUserId());
-            if(checkUserExistsResult.getErrorCode() == 0 && !checkUserExistsResult.isUserExists()){
+            if(checkUserExistsResult.getErrorCode() == 0 && !checkUserExistsResult.isExists()){
                 addUserResult = userService.addUser(newUser);
             }
-            else if(checkUserExistsResult.getErrorCode() == 0 && checkUserExistsResult.isUserExists()){
+            else if(checkUserExistsResult.getErrorCode() == 0 && checkUserExistsResult.isExists()){
                 addUserResult.setErrorCode(0);
                 addUserResult.setErrorMessage("User already exists");
             }
@@ -41,8 +40,8 @@ public class userController {
     }
 
     @GetMapping("/user/exists/{userId}")
-    public CheckUserExistsResult checkIfUserExists(@PathVariable String userId){
-        CheckUserExistsResult checkUserExistsResult = new CheckUserExistsResult(1, "Failure", false);
+    public CheckIfExistsResult checkIfUserExists(@PathVariable String userId){
+        CheckIfExistsResult checkUserExistsResult = new CheckIfExistsResult(1, "Failure", false);
         try{
             return userService.checkIfUserExists(userId);
         }
@@ -55,13 +54,13 @@ public class userController {
     public GetUserResult getUser(@PathVariable String userId){
 
         GetUserResult getUserResult = new GetUserResult(1,"Failure", new User());
-        CheckUserExistsResult checkUserExistsResult = new CheckUserExistsResult(1, "Failure", false);
+        CheckIfExistsResult checkUserExistsResult = new CheckIfExistsResult(1, "Failure", false);
         try{
             checkUserExistsResult = userService.checkIfUserExists(userId);
-            if(checkUserExistsResult.getErrorCode()==0 &&  checkUserExistsResult.isUserExists()){
+            if(checkUserExistsResult.getErrorCode()==0 &&  checkUserExistsResult.isExists()){
                 getUserResult = userService.getUser(userId);
             }
-            else if(checkUserExistsResult.getErrorCode()==0 && !checkUserExistsResult.isUserExists()){
+            else if(checkUserExistsResult.getErrorCode()==0 && !checkUserExistsResult.isExists()){
                 getUserResult.setErrorCode(0);
                 getUserResult.setErrorMessage("User does not exists");
             }

@@ -1,9 +1,8 @@
 package com.dialogue.dialogue.dao;
 
 import com.dialogue.dialogue.models.classes.UserClasses.AddUserResult;
-import com.dialogue.dialogue.models.classes.UserClasses.CheckUserExistsResult;
+import com.dialogue.dialogue.models.classes.CheckIfExistsResult;
 import com.dialogue.dialogue.models.classes.UserClasses.GetUserResult;
-import com.dialogue.dialogue.models.classes.Result;
 import com.dialogue.dialogue.models.classes.UserClasses.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -25,8 +24,8 @@ public class UserDao {
         return rowsAffected;
     }
 
-    public CheckUserExistsResult checkIfUserExists(String userId){
-        CheckUserExistsResult checkUserExistsResult = new CheckUserExistsResult(1, "Failure", false);
+    public CheckIfExistsResult checkIfUserExists(String userId){
+        CheckIfExistsResult checkUserExistsResult = new CheckIfExistsResult(1, "Failure", false);
 
         try{
             String query = "SELECT COUNT(*) FROM USER WHERE USERID = ?";
@@ -34,10 +33,10 @@ public class UserDao {
             checkUserExistsResult.setErrorCode(0);
             checkUserExistsResult.setErrorMessage("Success");
             if(result>0){
-                checkUserExistsResult.setUserExists(true);
+                checkUserExistsResult.setExists(true);
             }
             else{
-                checkUserExistsResult.setUserExists(false);
+                checkUserExistsResult.setExists(false);
             }
         }
         catch(Exception e){
@@ -58,6 +57,7 @@ public class UserDao {
             if(rowsAffected!=0){
                 addUserResult.setErrorCode(0);
                 addUserResult.setErrorMessage("Success");
+                addUserResult.setUserAdded(true);
             }
         }
         catch(Exception e){

@@ -2,9 +2,8 @@ package com.dialogue.dialogue.services;
 
 import com.dialogue.dialogue.dao.UserDao;
 import com.dialogue.dialogue.models.classes.UserClasses.AddUserResult;
-import com.dialogue.dialogue.models.classes.UserClasses.CheckUserExistsResult;
+import com.dialogue.dialogue.models.classes.CheckIfExistsResult;
 import com.dialogue.dialogue.models.classes.UserClasses.GetUserResult;
-import com.dialogue.dialogue.models.classes.Result;
 import com.dialogue.dialogue.models.classes.UserClasses.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class UserService {
         return userDao.addUser(newUser);
     }
 
-    public CheckUserExistsResult checkIfUserExists(String userId){
+    public CheckIfExistsResult checkIfUserExists(String userId){
         return userDao.checkIfUserExists(userId);
     }
 
