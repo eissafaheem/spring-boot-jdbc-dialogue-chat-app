@@ -1,4 +1,4 @@
-package com.dialogue.dialogue.models.classes;
+package com.dialogue.dialogue.models.classes.UserClasses;
 
 import com.dialogue.dialogue.models.interfaces.IUser;
 
@@ -7,6 +7,9 @@ public class User implements IUser {
     String userName;
     String passwordHash;
 
+    public User(){
+
+    }
     public User(String userId, String userName, String passwordHash) {
         this.userId = userId;
         this.userName = userName;

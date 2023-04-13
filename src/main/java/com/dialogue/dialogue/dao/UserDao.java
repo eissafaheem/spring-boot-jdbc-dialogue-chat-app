@@ -1,11 +1,16 @@
 package com.dialogue.dialogue.dao;
 
-import com.dialogue.dialogue.models.classes.CheckUserExistsResult;
+import com.dialogue.dialogue.models.classes.UserClasses.AddUserResult;
+import com.dialogue.dialogue.models.classes.UserClasses.CheckUserExistsResult;
+import com.dialogue.dialogue.models.classes.UserClasses.GetUserResult;
 import com.dialogue.dialogue.models.classes.Result;
-import com.dialogue.dialogue.models.classes.User;
+import com.dialogue.dialogue.models.classes.UserClasses.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class UserDao {
@@ -42,27 +47,39 @@ public class UserDao {
         return checkUserExistsResult;
     }
 
-    public Result addUser(User newUser){
+    public AddUserResult addUser(User newUser){
 
-        Result result = new Result(1, "Failure");
+        AddUserResult addUserResult = new AddUserResult(1, "Failure", false);
         int userTableCreation = this.createUserTable();
         try{
-            CheckUserExistsResult userExists = this.checkIfUserExists((newUser.getUserId()));
-
             int rowsAffected = 0;
-            if(!userExists.isUserExists()){
-                String query = "INSERT INTO USER VALUES('"+newUser.getUserId()+"', '"+newUser.getUserName()+"', '"+newUser.getPasswordHash()+"')";
-                rowsAffected = jdbcTemplate.update(query);
-                if(rowsAffected!=0){
-                    result.setErrorCode(0);
-                    result.setErrorMessage("Success");
-                }
+            String query = "INSERT INTO USER VALUES('"+newUser.getUserId()+"', '"+newUser.getUserName()+"', '"+newUser.getPasswordHash()+"')";
+            rowsAffected = jdbcTemplate.update(query);
+            if(rowsAffected!=0){
+                addUserResult.setErrorCode(0);
+                addUserResult.setErrorMessage("Success");
             }
         }
         catch(Exception e){
-            return result;
+            return addUserResult;
         }
 
-        return result;
+        return addUserResult;
+    }
+
+    public GetUserResult getUser(String userId){
+        GetUserResult getUserResult = new GetUserResult(1, "Failure", new User());
+        String query = "SELECT * FROM USER WHERE USERID = '"+userId+"'";
+        try{
+            List<User> users = jdbcTemplate.query(query, new BeanPropertyRowMapper<User>(User.class));
+            getUserResult.setErrorCode(0);
+            getUserResult.setErrorMessage("Success");
+            getUserResult.setUser(users.get(0));
+        }
+        catch(Exception e){
+            return getUserResult;
+        }
+
+        return getUserResult;
     }
 }

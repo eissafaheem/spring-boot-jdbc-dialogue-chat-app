@@ -1,6 +1,8 @@
-package com.dialogue.dialogue.models.classes;
+package com.dialogue.dialogue.models.classes.UserClasses;
 
-public class CheckUserExistsResult extends Result{
+import com.dialogue.dialogue.models.classes.Result;
+
+public class CheckUserExistsResult extends Result {
     boolean userExists;
 
     public CheckUserExistsResult(int errorCode, String errorMessage, boolean userExists) {
